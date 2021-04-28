@@ -193,7 +193,7 @@ def convert_onetoone_field_to_djangomodel(field, registry=None):
     def dynamic_type():
         _type = registry.get_type_for_model(model)
         if not _type:
-            assert _type, model  # We want to throw an error if we are
+            assert _type, (field, model)  # We want to throw an error if we are
 
         # We do this for a bug in Django 1.8, where null attr
         # is not available in the OneToOneRel instance
@@ -212,7 +212,7 @@ def convert_field_to_list_or_connection(field, registry=None):
     def dynamic_type():
         _type = registry.get_type_for_model(model)
         if not _type:
-            return
+            assert _type, (field, model)
 
         description = (
             field.help_text
@@ -252,6 +252,7 @@ def convert_field_to_djangomodel(field, registry=None):
     def dynamic_type():
         _type = registry.get_type_for_model(model)
         if not _type:
+            assert _type, (field, model)
             return
 
         return Field(_type, description=field.help_text, required=not field.null)

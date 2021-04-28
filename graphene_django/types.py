@@ -60,10 +60,13 @@ def construct_fields(
             else:
                 _convert_choices_to_enum = False
 
-        converted = convert_django_field_with_choices(
-            field, registry, convert_choices_to_enum=_convert_choices_to_enum
-        )
-        fields[name] = converted
+        try:
+            converted = convert_django_field_with_choices(
+                field, registry, convert_choices_to_enum=_convert_choices_to_enum
+            )
+            fields[name] = converted
+        except Exception:
+            raise Exception(f"Need to explicitly define %s for %s" % (name, field, model))
 
     return fields
 
